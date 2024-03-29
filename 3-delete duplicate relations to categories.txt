@@ -10,4 +10,4 @@ match (a)-[r:CATEGORY]->(b)
 with a,b,type(r) as typ, tail(collect(r)) as coll 
 foreach(x in coll | delete x)
 
-//Remove duplicate nodes but keep relations
+
