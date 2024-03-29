@@ -12,7 +12,7 @@ ORDER BY localClusteringCoefficient DESC
 //Create a graph called betweennessCentrality
 CALL gds.graph.project('betweennessCentrality', 'Fighter', { LOST_FROM: { properties: 'name' }})
 
-//Executes betweenness centrality algorithm which is telling us which nodes are important, due to their position in a graph. Nodes with greater score represent so called 'bridges' to other parts of graph. Regarding that they are pottential weak spots of graph, meaning in case of deleting them we have smaller number of shortpaths in graph, and that could expensive in maners of speed,time etc. when executing some operations  
+//Executes betweenness centrality algorithm which is telling us which nodes are important, due to their position in a graph. Nodes with greater score represent so called 'bridges' to other parts of graph. Regarding that they are pottential weak spots of graph, meaning that in case of deleting them we have smaller number of shortpaths in graph, and that could result in more expensive operations on the graph, concerning speed,time etc. 
 CALL gds.betweenness.stream('centiranje2')
 YIELD nodeId, score
 RETURN gds.util.asNode(nodeId).name AS name, score
