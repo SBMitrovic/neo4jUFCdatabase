@@ -1,0 +1,13 @@
+
+//Check what is going to be deleted
+match (a)-[c:CATEGORY]->(b) 
+with a,b,type(c) as typ, tail(collect(c)) as coll 
+foreach(x in coll | set x.willBeDeleted = TRUE)
+
+
+//Delete duplicate category relations
+match (a)-[r:CATEGORY]->(b) 
+with a,b,type(r) as typ, tail(collect(r)) as coll 
+foreach(x in coll | delete x)
+
+//Remove duplicate nodes but keep relations

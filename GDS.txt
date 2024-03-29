@@ -1,0 +1,17 @@
+//Kreiranje
+CALL gds.graph.project('clust3', 'Fighter', { WON_AGAINST: { orientation: 'UNDIRECTED' }})
+
+
+CALL gds.localClusteringCoefficient.stream('clust3')
+YIELD nodeId, localClusteringCoefficient
+RETURN gds.util.asNode(nodeId).name AS name, localClusteringCoefficient
+ORDER BY localClusteringCoefficient DESC
+
+
+//Kreiranje
+CALL gds.graph.project('centiranje2', 'Fighter', { LOST_FROM: { properties: 'name' }})
+
+CALL gds.betweenness.stream('centiranje2')
+YIELD nodeId, score
+RETURN gds.util.asNode(nodeId).name AS name, score
+ORDER BY score DESC

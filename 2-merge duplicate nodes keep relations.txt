@@ -1,0 +1,13 @@
+MATCH (a:Fighter)
+WITH a.name as name, COLLECT(a) AS ns
+WHERE size(ns) > 1
+CALL apoc.refactor.mergeNodes(ns) YIELD node
+RETURN node;
+
+
+MATCH (a: Event)
+WITH a.location as name, COLLECT(a) AS ns
+WHERE size(ns) > 1
+CALL apoc.refactor.mergeNodes(ns) YIELD node
+RETURN node;
+

@@ -1,0 +1,26 @@
+LOAD CSV WITH HEADERS FROM 'file:///ufc_champs_final.csv' AS row           
+MERGE (fR : Fighter {name : row.R_fighter, gender: row.gender, win_streak : toInteger(coalesce(row.R_longest_win_streak,0)),  age: toInteger(coalesce(row.R_age,0)), 
+stance: row.R_Stance, height:toInteger(coalesce(row.R_Height_cms,0)), weight_lbs:toInteger(coalesce(row.R_Weight_lbs,0)),
+ reach:toInteger(coalesce(row.R_Reach_cms))})
+MERGE (fB : Fighter {name : row.B_fighter, gender: row.gender, win_streak : toInteger(coalesce(row.B_longest_win_streak,0)), age: toInteger(coalesce(row.B_age,0)),stance:row.B_Stance,
+ height:toInteger(coalesce(row.B_Height_cms,0)), weight_lbs:toInteger(coalesce(row.B_Weight_lbs,0)),reach:toInteger(coalesce(row.R_Reach_cms))})
+MERGE(c:Category {name : row.weight_class})
+MERGE(e:Event {country :row.country, location:row.location})
+
+MERGE((fR)-[:CATEGORY]->(c))
+MERGE((fB)-[:CATEGORY]->(c))
+
+MERGE((fR)-[:FOUGHT_AT]->(e))
+MERGE((fB)-[:FOUGHT_AT]->(e))	  
+
+
+
+
+FOREACH (_ in case when row.Winner IN ['Red'] then [1] else [] end |
+    MERGE((fR)-[:WON_AGAINST {location :row.location, betting_odds:row.R_odds}]->(fB))
+    MERGE((fB)-[:LOST_FROM {location :row.location, betting_odds: row.R_odds}]->(fR)))
+
+FOREACH (_ in case when row.Winner IN ['Blue'] then [1] else [] end |
+    MERGE((fB)-[:WON_AGAINST {location :row.location, betting_odds:row.B_odds}]->(fR))
+    MERGE((fR)-[:LOST_FROM {location :row.location, betting_odds:row.B_odds}]->(fB)))
+
