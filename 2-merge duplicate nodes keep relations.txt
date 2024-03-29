@@ -1,3 +1,5 @@
+//due to the approach we had in the load script, and the structure of the csv file, we now have duplicate nodes created for the :Fighter type, so they need to be removed while we will keep all the connections and put them in a unique node that represents one fighter
+
 MATCH (a:Fighter)
 WITH a.name as name, COLLECT(a) AS ns
 WHERE size(ns) > 1
