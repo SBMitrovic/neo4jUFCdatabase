@@ -1,6 +1,7 @@
-//Kreiranje
+//Create a graph called 'clust3'
 CALL gds.graph.project('clust3', 'Fighter', { WON_AGAINST: { orientation: 'UNDIRECTED' }})
 
+//Execute Graph data science alghoritm which calculates localClusteringCoefficient( it tells us what is the chance that neigbhoring nodes are connected with others) for every node in the graph
 
 CALL gds.localClusteringCoefficient.stream('clust3')
 YIELD nodeId, localClusteringCoefficient
@@ -8,9 +9,10 @@ RETURN gds.util.asNode(nodeId).name AS name, localClusteringCoefficient
 ORDER BY localClusteringCoefficient DESC
 
 
-//Kreiranje
-CALL gds.graph.project('centiranje2', 'Fighter', { LOST_FROM: { properties: 'name' }})
+//Create a graph called betweennessCentrality
+CALL gds.graph.project('betweennessCentrality', 'Fighter', { LOST_FROM: { properties: 'name' }})
 
+//Executes betweenness centrality algorithm which is telling us which nodes are important, due to their position in a graph. Nodes with greater score represent so called 'bridges' to other parts of graph. Regarding that they are pottential weak spots of graph, meaning in case of deleting them we have smaller number of shortpaths in graph, and that could expensive in maners of speed,time etc. when executing some operations  
 CALL gds.betweenness.stream('centiranje2')
 YIELD nodeId, score
 RETURN gds.util.asNode(nodeId).name AS name, score
